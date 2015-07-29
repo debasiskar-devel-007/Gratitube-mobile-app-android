@@ -40,7 +40,7 @@ public class WebViewController extends WebViewClient  {
             {
 
                 Context context = view.getContext();
-                Intent cameraintent = new Intent(context, facebook.class);
+                Intent cameraintent = new Intent(context, HelloFacebookSampleActivity.class);
 
 
                 // Launch default browser
