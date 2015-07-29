@@ -15,85 +15,77 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
+//import com.facebook.Request;
+/*import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;*/
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
+import  com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-
 public class facebook extends Activity {
-    private TextView info;
-    private LoginButton loginButton;
-    private CallbackManager callbackManager;
-
-    private LoginButton loginBtn;
-    private Button postImageBtn;
-    private Button updateStatusBtn;
-
-    private TextView userName;
-
-
-
-    private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
-
-    private static String message = "Sample status posted from android app";
-
+    LoginButton loginButton;
+    CallbackManager callbackManager;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
+
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
+
         setContentView(R.layout.activity_facebook);
-        info = (TextView)findViewById(R.id.info);
-        loginButton = (LoginButton)findViewById(R.id.login_button);
 
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions("email", "user_likes", "user_friends");
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
-                info.setText("Login attempt success.");
+            public void onClick(View v) {
 
-            }
+                //callback registration
 
-            @Override
-            public void onCancel() {
-                info.setText("Login attempt canceled.");
+                LoginManager.getInstance().registerCallback(callbackManager,
+                        new FacebookCallback<LoginResult>() {
+                            @Override
+                            public void onSuccess(LoginResult loginResult) {
+                                // App code
 
-            }
+                                LoginManager.getInstance().logInWithReadPermissions(facebook.this, Arrays.asList("public_profile", "user_friends"));
+                                Log.e("-->", Arrays.asList("public_profile", "user_friends").toString());
+                                Toast.makeText(getApplication(), "success", Toast.LENGTH_SHORT).show();
 
-            @Override
-            public void onError(FacebookException e) {
-                info.setText("Login attempt error.");
 
+                            }
+
+                            @Override
+                            public void onCancel() {
+                                // App code
+                                Toast.makeText(getApplication(),"fail",Toast.LENGTH_SHORT).show();
+                            }
+
+
+                            public void onError(FacebookException exception) {
+                                // App code
+                                Toast.makeText(getApplication(),"error",Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
 
-
-
-
     }
 
 
 
-
-
-
-
-
-
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedState) {
-        super.onSaveInstanceState(savedState);
-
-    }
-
 }

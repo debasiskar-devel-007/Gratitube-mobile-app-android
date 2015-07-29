@@ -3,6 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="app_id">144040945802106</string>
     <string name="btnTakePicture" />
     <string name="or" />
     <string name="btnUploadToServer" />
