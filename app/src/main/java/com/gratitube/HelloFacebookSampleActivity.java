@@ -43,6 +43,7 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
+import com.facebook.login.widget.LoginButton;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.ProfilePictureView;
 import com.facebook.share.ShareApi;
