@@ -7,7 +7,7 @@ import android.webkit.WebView;
 import android.widget.Toast;
 
 /**
- * Created by Debasis-01 on 7/29/2015.
+ * Created by KTA-PC 21 on 3/30/2015.
  */
 public class WebAppInterface extends MainActivity  {
     Context mContext;
@@ -47,4 +47,3 @@ public class WebAppInterface extends MainActivity  {
 
 
 }
-
