@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -21,7 +22,17 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.InputStream;
 import java.lang.reflect.Method;
 
 public class MainActivity extends Activity implements LocationListener {
@@ -34,6 +45,9 @@ public class MainActivity extends Activity implements LocationListener {
     private Button btn1;
     ProgressDialog progressDialog;
     private String deviceId;
+    private String activity;
+    private String username;
+    private ProgressDialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +57,19 @@ public class MainActivity extends Activity implements LocationListener {
 		// turnGPSOn();
 
 		myWebView = (WebView) findViewById(R.id.webView1);
+        Intent intent = getIntent();
 
         myWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
-
+        activity =  intent.getStringExtra("isuserregistered");
+        activity=activity.valueOf(activity);
+        if(activity.matches("yes")){
+            username =  intent.getStringExtra("username");
+            username=username.valueOf(username);
+            /*dialog = ProgressDialog.show(MainActivity.this,
+                    "Uploading", "Please wait...", true);
+            new ImageUploadTask().execute();
+*/
+        }
 
 
 
@@ -175,12 +199,12 @@ public class MainActivity extends Activity implements LocationListener {
         // Getting longitude of the current location
         double longitude = location.getLongitude();
 
-        deviceId = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        // Toast.makeText(this, deviceId, Toast.LENGTH_SHORT).show();
+        /*deviceId = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);*/
+         Toast.makeText(this, deviceId, Toast.LENGTH_SHORT).show();
 
-        myWebView.loadUrl("javascript:setValue("+latitude+")");
-        myWebView.loadUrl("javascript:setValuelong("+longitude+")");
+        myWebView.loadUrl("javascript:setValue("+username+")");
+        //myWebView.loadUrl("javascript:setValuelong("+deviceId+")");
 
         myWebView.loadUrl("javascript:add_userdevice_with_session('"+deviceId +"')");
 
@@ -438,6 +462,79 @@ public class MainActivity extends Activity implements LocationListener {
         }
     }
 
+    class ImageUploadTask extends AsyncTask<Void, Void, String> {
+        @SuppressWarnings("unused")
+        @Override
+        protected String doInBackground(Void... unsued) {
+            InputStream is;
+
+
+            /*Toast.makeText(getApplicationContext(), "Unknown path",
+                    Toast.LENGTH_LONG).show();*/
+            MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+
+            /*reqEntity.addPart("myFile",
+                    deviceId+ ".jpg", is);*/
+            reqEntity.addPart("username",
+                    StringBody.create(username));
+            reqEntity.addPart("deviceid",
+                    StringBody.create(deviceId));
+
+            //FileBody bin = new FileBody(new File("C:/ABC.txt"));
+
+
+
+
+
+
+
+
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new
+                        // Here you need to put your server file address
+                        HttpPost("http://admin.gratitube.influxiq.com/?q=ngmodule/register");
+                // httppost.setEntity(new  UrlEncodedFormEntity(nameValuePairs));
+                httppost.setEntity(reqEntity);
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity entity = response.getEntity();
+                is = entity.getContent();
+                dialog.dismiss();
+
+
+                /*Context context = HelloFacebookSampleActivity.this;
+                Intent cameraintent = new Intent(context, MainActivity.class);
+                cameraintent.putExtra("isuserregistered", "group");
+
+
+                // Launch default browser
+                context.startActivity(cameraintent);*/
+                Log.v("log_tag", "In the try Loop");
+            } catch (Exception e) {
+                Log.v("log_tag", "Error in http connection " + e.toString());
+            }
+            return "Success";
+            // (null);
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... unused) {
+
+        }
+
+        @Override
+        protected void onPostExecute(String sResponse) {
+            try {
+                if (dialog.isShowing())
+                    dialog.dismiss();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), e.getMessage(),
+                        Toast.LENGTH_LONG).show();
+                Log.e(e.getClass().getName(), e.getMessage(), e);
+            }
+        }
+
+    }
 
 
 

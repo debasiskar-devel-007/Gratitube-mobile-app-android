@@ -21,17 +21,24 @@
 package com.gratitube;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -53,6 +60,18 @@ import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -79,6 +98,10 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
     private CallbackManager callbackManager;
     private ProfileTracker profileTracker;
     private ShareDialog shareDialog;
+    private ProgressDialog dialog;
+    private LoginButton loginbutton;
+    private String deviceId;
+    private String profileid;
     private FacebookCallback<Sharer.Result> shareCallback = new FacebookCallback<Sharer.Result>() {
         @Override
         public void onCancel() {
@@ -122,9 +145,16 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
 
         callbackManager = CallbackManager.Factory.create();
+        loginbutton = (LoginButton) findViewById(R.id.login_button);
+       // loginbutton.performClick();
+        deviceId = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        //LoginManager.getInstance();
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends","email"));
 
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
@@ -251,6 +281,21 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
         profileTracker.stopTracking();
     }
 
+
+    public void sendMessage(View view) {
+
+        /*dialog = ProgressDialog.show(HelloFacebookSampleActivity.this,
+                "Uploading", "Please wait...", true);*/
+        //new Postdata().execute();
+        Context context = HelloFacebookSampleActivity.this;
+        Intent cameraintent = new Intent(context, MainActivity.class);
+        cameraintent.putExtra("isuserregistered", "yes");
+        cameraintent.putExtra("username", profileid);
+        context.startActivity(cameraintent);
+
+    }
+
+
     private void updateUI() {
         boolean enableButtons = AccessToken.getCurrentAccessToken() != null;
 
@@ -260,7 +305,16 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
         Profile profile = Profile.getCurrentProfile();
         if (enableButtons && profile != null) {
             profilePictureView.setProfileId(profile.getId());
-            greeting.setText(getString(R.string.hello_user, profile.getFirstName()));
+            Toast.makeText(this, profile.getId(), Toast.LENGTH_SHORT).show();
+            profileid=profile.getId();
+            Toast.makeText(this, deviceId, Toast.LENGTH_SHORT).show();
+
+           /* dialog = ProgressDialog.show(HelloFacebookSampleActivity.this,
+                    "Uploading", "Please wait...", true);*/
+            //new ImageUploadTask().execute();
+            //Toast.makeText(this, profile.().get("email"), Toast.LENGTH_SHORT).show();
+
+            //greeting.setText(getString(R.string.hello_user, profile.getFirstName()));
         } else {
             profilePictureView.setProfileId(null);
             greeting.setText(null);
@@ -342,5 +396,81 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
             pendingAction = action;
             handlePendingAction();
         }
+    }
+
+
+
+
+    class Postdata extends AsyncTask<Void, Void, String> {
+        @SuppressWarnings("unused")
+        @Override
+        protected String doInBackground(Void... unsued) {
+            InputStream is;
+
+
+            /*Toast.makeText(getApplicationContext(), "Unknown path",
+                    Toast.LENGTH_LONG).show();*/
+            MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+
+            /*reqEntity.addPart("myFile",
+                    deviceId+ ".jpg", is);*/
+            reqEntity.addPart("username",
+                    StringBody.create(profileid));
+            reqEntity.addPart("deviceid",
+                    StringBody.create(deviceId));
+
+            //FileBody bin = new FileBody(new File("C:/ABC.txt"));
+
+
+
+
+
+
+
+
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new
+                        // Here you need to put your server file address
+                        HttpPost("http://admin.gratitube.influxiq.com/?q=ngmodule/register");
+                // httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                httppost.setEntity(reqEntity);
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity entity = response.getEntity();
+                //is = entity.getContent();
+
+
+                /*Context context = HelloFacebookSampleActivity.this;
+                Intent cameraintent = new Intent(context, MainActivity.class);
+                cameraintent.putExtra("isuserregistered", "group");
+
+
+                // Launch default browser
+                context.startActivity(cameraintent);*/
+                Log.v("log_tag", "In the try Loop");
+            } catch (Exception e) {
+                Log.v("log_tag", "Error in http connection " + e.toString());
+            }
+            return "Success";
+            // (null);
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... unused) {
+
+        }
+
+        @Override
+        protected void onPostExecute(String sResponse) {
+            try {
+                if (dialog.isShowing())
+                    dialog.dismiss();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), e.getMessage(),
+                        Toast.LENGTH_LONG).show();
+                Log.e(e.getClass().getName(), e.getMessage(), e);
+            }
+        }
+
     }
 }
