@@ -201,7 +201,7 @@ public class MainActivity extends Activity implements LocationListener {
 
         /*deviceId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);*/
-         Toast.makeText(this, deviceId, Toast.LENGTH_SHORT).show();
+         //Toast.makeText(this, deviceId, Toast.LENGTH_SHORT).show();
 
         myWebView.loadUrl("javascript:setValue("+username+")");
         //myWebView.loadUrl("javascript:setValuelong("+deviceId+")");
