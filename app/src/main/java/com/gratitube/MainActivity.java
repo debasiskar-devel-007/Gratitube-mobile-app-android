@@ -47,6 +47,7 @@ public class MainActivity extends Activity implements LocationListener {
     private String deviceId;
     private String activity;
     private String username;
+    private String accessToken;
     private ProgressDialog dialog;
 
 	@Override
@@ -64,7 +65,9 @@ public class MainActivity extends Activity implements LocationListener {
         activity=activity.valueOf(activity);
         if(activity.matches("yes")){
             username =  intent.getStringExtra("username");
+            accessToken =  intent.getStringExtra("accesstoken");
             username=username.valueOf(username);
+            accessToken=accessToken.valueOf(accessToken);
             /*dialog = ProgressDialog.show(MainActivity.this,
                     "Uploading", "Please wait...", true);
             new ImageUploadTask().execute();
@@ -201,12 +204,13 @@ public class MainActivity extends Activity implements LocationListener {
 
         /*deviceId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);*/
-         //Toast.makeText(this, deviceId, Toast.LENGTH_SHORT).show();
+         //Toast.makeText(this, accessToken, Toast.LENGTH_SHORT).show();
 
         myWebView.loadUrl("javascript:setValue("+username+")");
         //myWebView.loadUrl("javascript:setValuelong("+deviceId+")");
 
         myWebView.loadUrl("javascript:add_userdevice_with_session('"+deviceId +"')");
+        myWebView.loadUrl("javascript:add_accesstoken_with_session('"+accessToken +"')");
 
 
         /*Context context = myWebView.getContext();

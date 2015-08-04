@@ -103,6 +103,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
     private String deviceId;
     private String profileid;
     private  Button postdata;
+    String accessToken;
     private FacebookCallback<Sharer.Result> shareCallback = new FacebookCallback<Sharer.Result>() {
         @Override
         public void onCancel() {
@@ -163,6 +164,9 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         handlePendingAction();
+                        accessToken= loginResult.getAccessToken().getToken();
+                        Toast.makeText(getApplicationContext(), "accesstoken: "+accessToken,
+                         Toast.LENGTH_LONG).show();
                         updateUI();
                         //postdata.setVisibility(View.VISIBLE);
                     }
@@ -295,6 +299,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
         Intent cameraintent = new Intent(context, MainActivity.class);
         cameraintent.putExtra("isuserregistered", "yes");
         cameraintent.putExtra("username", profileid);
+        cameraintent.putExtra("accesstoken", accessToken);
         context.startActivity(cameraintent);
 
     }
@@ -302,6 +307,9 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 
     private void updateUI() {
         boolean enableButtons = AccessToken.getCurrentAccessToken() != null;
+        AccessToken token = AccessToken.getCurrentAccessToken();
+        String tokenval=String.valueOf(token);
+
 
         postStatusUpdateButton.setEnabled(enableButtons || canPresentShareDialog);
         postPhotoButton.setEnabled(enableButtons || canPresentShareDialogWithPhotos);
@@ -313,7 +321,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
             profileid=profile.getId();
             //postdata.setVisibility(View.VISIBLE);
             //postdata.performClick();
-            //Toast.makeText(this, deviceId, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, tokenval, Toast.LENGTH_SHORT).show();
 
            /* dialog = ProgressDialog.show(HelloFacebookSampleActivity.this,
                     "Uploading", "Please wait...", true);*/
