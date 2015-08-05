@@ -52,6 +52,37 @@ public class WebViewController extends WebViewClient  {
             }
 
 
+            if(url.contains("uploadvideoapp"))
+            {
+
+                Context context = view.getContext();
+                Intent cameraintent = new Intent(context, videoActivity.class);
+
+
+                // Launch default browser
+                context.startActivity(cameraintent);
+
+                return true;
+
+
+            }
+
+            if(url.contains("uploadimageapp"))
+            {
+
+                Context context = view.getContext();
+                Intent cameraintent = new Intent(context, upload.class);
+
+
+                // Launch default browser
+                context.startActivity(cameraintent);
+
+                return true;
+
+
+            }
+
+
 
 
 
@@ -76,15 +107,15 @@ public class WebViewController extends WebViewClient  {
             // in standard case YourActivity.this
             Context context = view.getContext();
             progressDialog = new ProgressDialog(context);
-            progressDialog.setMessage("Loading...");
-            progressDialog.show();
+           // progressDialog.setMessage("Loading...");
+           // progressDialog.show();
         }
     }
     public void onPageFinished(WebView view, String url) {
         try{
             if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-                progressDialog = null;
+               // progressDialog.dismiss();
+               // progressDialog = null;
             }
         }catch(Exception exception){
             exception.printStackTrace();

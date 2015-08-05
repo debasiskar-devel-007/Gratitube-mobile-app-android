@@ -27,8 +27,10 @@ import android.widget.VideoView;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+//import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -37,6 +39,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -44,6 +47,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -114,6 +118,8 @@ public class videoActivity extends Activity {
                 else {
                     dialog = ProgressDialog.show(videoActivity.this,
                             "Uploading", "Please wait...", true);
+
+
                     new VideoUploadTask().execute();
 
                 }
@@ -148,50 +154,64 @@ public class videoActivity extends Activity {
         @Override
         protected String doInBackground(Void... unsued) {
 
-            MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            long totalSize = 0;
 
-            /*reqEntity.addPart("myFile",
-                    deviceId+ ".jpg", is);*/
-            File sourceFile = new File(fileuri);
+            String responseString = null;
 
-            // Adding file data to http body
-            reqEntity.addPart("image", new FileBody(sourceFile));
-            try {
-                reqEntity.addPart("name", new StringBody(deviceId));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-            //FileBody bin = new FileBody(new File("C:/ABC.txt"));
-
-
-
-
-
-
-
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost("http://torqkd.com/user/ajs/uploadvideotest");
 
             try {
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new
-                        // Here you need to put your server file address
-                        HttpPost("http://torqkd.com/user/ajs/uploadvideo");
-                // httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                httppost.setEntity(reqEntity);
+                AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
+                        new AndroidMultiPartEntity.ProgressListener() {
+
+                            @Override
+                            public void transferred(long num) {
+                               // publishProgress((int) ((num / (float) totalSize) * 100));
+                            }
+                        });
+
+                File sourceFile = new File(fileuri);
+
+                // Adding file data to http body
+                entity.addPart("myFile", new FileBody(sourceFile));
+
+                // Extra parameters if you want to pass to server
+                entity.addPart("deviceId",
+                        new StringBody(deviceId));
+                entity.addPart("email", new StringBody("abc@gmail.com"));
+
+                totalSize = entity.getContentLength();
+                httppost.setEntity(entity);
+
+                // Making server call
                 HttpResponse response = httpclient.execute(httppost);
-                //HttpEntity entity = response.getEntity();
-                //is = entity.getContent();
+                HttpEntity r_entity = response.getEntity();
+
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode == 200) {
+                    // Server response
+                    responseString = EntityUtils.toString(r_entity);
+                } else {
+                    responseString = "Error occurred! Http Status Code: "
+                            + statusCode;
+                }
 
                 Context context = videoActivity.this;
                 Intent cameraintent = new Intent(context, MainActivity.class);
 
+
                 // Launch default browser
                 context.startActivity(cameraintent);
-                Log.v("log_tag", "In the try Loop");
-            } catch (Exception e) {
-                Log.v("log_tag", "Error in http connection " + e.toString());
+
+            } catch (ClientProtocolException e) {
+                responseString = e.toString();
+            } catch (IOException e) {
+                responseString = e.toString();
             }
-            return "Success";
+
+            return responseString;
+
             // (null);
         }
 
@@ -403,6 +423,7 @@ public class videoActivity extends Activity {
             vidPreview.setVideoPath(fileuri);
             // start playing
             vidPreview.start();
+            Toast.makeText(this, fileuri, Toast.LENGTH_SHORT).show();
             upload.performClick();
             //upLoad2Server(fileuri);
            /* Toast.makeText(getApplicationContext(), fileuri,

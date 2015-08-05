@@ -319,7 +319,7 @@ public class upload extends Activity {
 
 
 
-            String uploadurl="http://torqkd.com/user/ajs/AddTempTable";
+            String uploadurl="http://gratitube-app.influxiq.com/upload.php";
             if(uploadtype.matches("group")){
                 uploadurl="http://torqkd.com/user/ajs/groupimage";
             }
