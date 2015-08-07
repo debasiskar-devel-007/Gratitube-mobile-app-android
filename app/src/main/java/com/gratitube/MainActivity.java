@@ -282,14 +282,14 @@ public class MainActivity extends Activity implements LocationListener {
         myWebView.getSettings().setGeolocationEnabled(true);
         myWebView.getSettings().setJavaScriptEnabled(true);
         Context context = myWebView.getContext();
-        myWebView.getSettings().setGeolocationDatabasePath( context.getFilesDir().getPath() );
+        myWebView.getSettings().setGeolocationDatabasePath(context.getFilesDir().getPath());
         myWebView.getSettings().setLoadWithOverviewMode(true);
         myWebView.getSettings().setUseWideViewPort(true);
-        myWebView.setWebChromeClient(new WebChromeClient() {
+       /* myWebView.setWebChromeClient(new WebChromeClient() {
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
                 callback.invoke(origin, true, false);
             }
-        });
+        });*/
 
 		myWebView.loadUrl("http://gratitube-app.influxiq.com/");
 		
@@ -352,9 +352,11 @@ public class MainActivity extends Activity implements LocationListener {
 		// boolean enabled = false;
 
 		if (!enabled) {
-			Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-			startActivityForResult(intent, 0);
-			enabled = true;
+			//Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			//startActivityForResult(intent, 0);
+			//enabled = true;
+            Toast.makeText(getApplicationContext(), "You Must Enable Gps Before you Login !!",
+                    Toast.LENGTH_LONG).show();
 		}
 		return enabled;
 

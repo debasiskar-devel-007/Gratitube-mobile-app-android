@@ -183,6 +183,10 @@ public class videoActivity extends Activity {
 
                 totalSize = entity.getContentLength();
                 httppost.setEntity(entity);
+                Context context = videoActivity.this;
+                Intent cameraintent = new Intent(context, MainActivity.class);
+                context.startActivity(cameraintent);
+
 
                 // Making server call
                 HttpResponse response = httpclient.execute(httppost);
@@ -197,12 +201,10 @@ public class videoActivity extends Activity {
                             + statusCode;
                 }
 
-                Context context = videoActivity.this;
-                Intent cameraintent = new Intent(context, MainActivity.class);
 
 
                 // Launch default browser
-                context.startActivity(cameraintent);
+
 
             } catch (ClientProtocolException e) {
                 responseString = e.toString();

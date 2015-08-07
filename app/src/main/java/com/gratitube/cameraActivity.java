@@ -430,7 +430,7 @@ public class cameraActivity extends Activity {
 
 
 
-            String uploadurl="http://torqkd.com/user/ajs/AddTempTable";
+            String uploadurl="http://torqkd.com/user/ajs/uploadimagetest";
             if(uploadtype.matches("group")){
                 uploadurl="http://torqkd.com/user/ajs/groupimage";
             }
