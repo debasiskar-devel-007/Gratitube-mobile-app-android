@@ -11,12 +11,14 @@ import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -47,6 +49,10 @@ public class upload extends Activity {
     private ProgressDialog dialog;
     private String deviceId;
     private String uploadtype;
+    private File root;
+    private String rootpath;
+    String lastpath=null;
+    private ArrayList<File> fileList = new ArrayList<File>();
 
 
 
@@ -55,6 +61,7 @@ public class upload extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.choose_uploader);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 
         deviceId = Settings.Secure.getString(this.getContentResolver(),
@@ -167,6 +174,15 @@ public class upload extends Activity {
         Context context;
         SortedSet<String> dirList = new TreeSet<>();
         ArrayList<ImageItem> resultIAV = new ArrayList<>();
+
+
+
+
+
+
+
+
+
 
         String[] directories = null;
         //if (u != null) {

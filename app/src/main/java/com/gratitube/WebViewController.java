@@ -71,7 +71,7 @@ public class WebViewController extends WebViewClient  {
             {
 
                 Context context = view.getContext();
-                Intent cameraintent = new Intent(context, upload.class);
+                Intent cameraintent = new Intent(context, videolist.class);
 
 
                 // Launch default browser

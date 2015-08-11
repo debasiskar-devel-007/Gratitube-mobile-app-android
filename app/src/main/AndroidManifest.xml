@@ -58,6 +58,9 @@
         </activity>
         <activity android:name=".videoActivity" >
         </activity>
+
+        <activity android:name=".videolist" >
+        </activity>
         <activity
             android:name=".facebook"
             android:label="@string/title_activity_facebook" >
