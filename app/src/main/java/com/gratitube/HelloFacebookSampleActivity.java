@@ -165,8 +165,8 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
                     public void onSuccess(LoginResult loginResult) {
                         handlePendingAction();
                         accessToken= loginResult.getAccessToken().getToken();
-                        Toast.makeText(getApplicationContext(), "accesstoken: "+accessToken,
-                         Toast.LENGTH_LONG).show();
+                        /*Toast.makeText(getApplicationContext(), "accesstoken: "+accessToken,
+                         Toast.LENGTH_LONG).show();*/
                         updateUI();
                         //postdata.setVisibility(View.VISIBLE);
                     }

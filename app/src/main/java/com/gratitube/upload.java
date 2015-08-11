@@ -18,7 +18,6 @@ import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -61,7 +60,6 @@ public class upload extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.choose_uploader);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 
         deviceId = Settings.Secure.getString(this.getContentResolver(),

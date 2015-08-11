@@ -65,6 +65,19 @@ public class WebViewController extends WebViewClient  {
                 return true;
 
 
+            }if(url.contains("uploadvideochoose"))
+            {
+
+                Context context = view.getContext();
+                Intent cameraintent = new Intent(context, upload.class);
+
+
+                // Launch default browser
+                context.startActivity(cameraintent);
+
+                return true;
+
+
             }
 
             if(url.contains("uploadimageapp"))

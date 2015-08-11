@@ -16,14 +16,7 @@
         android:paddingLeft="10dip"
         android:scaleType="centerCrop"
         android:paddingRight="10dip"/>
-    <ImageView
-        android:id="@+id/widget37"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/play"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        />
+
 
     <RelativeLayout
         android:id="@+id/linearLayout1"

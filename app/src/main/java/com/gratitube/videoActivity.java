@@ -183,9 +183,6 @@ public class videoActivity extends Activity {
 
                 totalSize = entity.getContentLength();
                 httppost.setEntity(entity);
-                Context context = videoActivity.this;
-                Intent cameraintent = new Intent(context, MainActivity.class);
-                context.startActivity(cameraintent);
 
 
                 // Making server call
@@ -194,6 +191,11 @@ public class videoActivity extends Activity {
 
                 int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode == 200) {
+
+                    Context context = videoActivity.this;
+                    Intent cameraintent = new Intent(context, MainActivity.class);
+                    context.startActivity(cameraintent);
+
                     // Server response
                     responseString = EntityUtils.toString(r_entity);
                 } else {
@@ -425,7 +427,7 @@ public class videoActivity extends Activity {
             vidPreview.setVideoPath(fileuri);
             // start playing
             vidPreview.start();
-            Toast.makeText(this, fileuri, Toast.LENGTH_SHORT).show();
+           /* Toast.makeText(this, fileuri, Toast.LENGTH_SHORT).show();*/
             upload.performClick();
             //upLoad2Server(fileuri);
            /* Toast.makeText(getApplicationContext(), fileuri,
