@@ -83,7 +83,7 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
         <meta-data android:name="com.facebook.sdk.ApplicationName"
             android:value="@string/facebook_app_name" />
-        <provider android:authorities="com.facebook.app.FacebookContentProvider144040945802106"
+        <provider android:authorities="com.facebook.app.FacebookContentProvider434078603403320"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true"/>
         <receiver android:name="com.gratitube.HelloFacebookBroadcastReceiver">

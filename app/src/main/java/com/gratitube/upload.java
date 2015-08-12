@@ -333,7 +333,7 @@ public class upload extends Activity {
 
 
 
-            String uploadurl="http://torqkd.com/user/ajs/http://torqkd.com/user/ajs/uploadimagetest";
+            String uploadurl="http://torqkd.com/user/ajs/uploadimagetest";
             if(uploadtype.matches("group")){
                 uploadurl="http://torqkd.com/user/ajs/groupimage";
             }
