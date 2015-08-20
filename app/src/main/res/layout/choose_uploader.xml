@@ -72,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dip"
                 android:onClick="openvideo"
+                android:visibility="invisible"
                 android:layout_gravity="bottom|center"
                 android:text="Take A Video" />
         </TableRow>

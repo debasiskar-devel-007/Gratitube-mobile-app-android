@@ -66,6 +66,14 @@ public class videolist extends Activity
         initialization();
     }
 
+
+
+    public void openvideo(View view) {
+        Intent intent = new Intent(this, videoActivity.class);
+
+        startActivity(intent);
+    }
+
     private void initialization()
     {
         System.gc();
@@ -80,7 +88,7 @@ public class videolist extends Activity
         count = videoCursor.getCount();
         counti = imageCursor.getCount();
         videolist = (ListView) findViewById(R.id.PhoneVideoList);
-        imagelist = (ListView) findViewById(R.id.imagelist);
+        //imagelist = (ListView) findViewById(R.id.imagelist);
 
         videolist.setAdapter(new VideoListAdapter(this.getApplicationContext()));
         videolist.setOnItemClickListener(videogridlistener);
