@@ -41,5 +41,5 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:layout_alignParentBottom="true"
-        android:text="Take A Video" />
+        android:text="Record A Video" />
 </RelativeLayout>

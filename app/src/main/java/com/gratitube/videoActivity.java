@@ -117,7 +117,7 @@ public class videoActivity extends Activity {
                 }
                 else {
                     dialog = ProgressDialog.show(videoActivity.this,
-                            "Uploading", "Please wait...", true);
+                            "Uploading", "Please wait... , It may take few minutes ", true);
 
 
                     new VideoUploadTask().execute();
