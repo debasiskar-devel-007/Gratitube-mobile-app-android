@@ -37,4 +37,5 @@
 <string name="pick_seattle_place">Pick a Seattle Place</string>
 
 <string name="exception">Exception: %1$s</string>
+    <string name="title_activity_contact">contact</string>
 </resources>
